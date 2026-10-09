@@ -9,7 +9,7 @@ from twilio.rest import Client
 from twilio.twiml.voice_response import VoiceResponse
 
 URL = (
-    "https://ticketgenie.in/ticket/"
+    "https://ticketgenie.in/member/"
     "india-vs-west-indies-5th-t20i-match-bengaluru-Oct17-2026/511"
 )
 STATE_FILE = Path("state.json")
