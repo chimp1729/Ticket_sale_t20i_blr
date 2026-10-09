@@ -49,7 +49,7 @@ def get_page_text():
     )
     response.raise_for_status()
     print("HTTP status:", response.status_code)
-    print("Response preview:", response.text[:500])
+    print("Response preview:", repr(response.text[:1000]))
     soup = BeautifulSoup(response.text, "html.parser")
     for tag in soup(["script", "style", "noscript"]):
         tag.decompose()
