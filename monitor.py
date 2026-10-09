@@ -121,9 +121,9 @@ def place_call():
 
 def main():
     if os.environ.get("TEST_CALL", "").lower() == "true":
-    print("TEST_CALL enabled; placing a test call.")
-    place_call()
-    return
+        print("TEST_CALL enabled; placing a test call.")
+        place_call()
+        return
     state = load_state()
     if state.get("alert_sent"):
         print("Alert already sent; skipping duplicate call.")
