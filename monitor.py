@@ -140,6 +140,6 @@ def main():
     else:
         print("Public ticket sale NOT confirmed; no call placed.")
         print("If the page uses different wording, review the Actions log and update PUBLIC_SALE_PHRASES.")
-
+        
 if __name__ == "__main__":
     main()
