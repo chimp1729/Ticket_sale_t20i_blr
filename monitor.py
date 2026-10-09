@@ -5,6 +5,7 @@ from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
 from twilio.rest import Client
 from twilio.twiml.voice_response import VoiceResponse
 
@@ -42,18 +43,39 @@ def save_state(state):
     )
 
 def get_page_text():
-    response = requests.get(
-        URL,
-        headers={"User-Agent": "Mozilla/5.0 (compatible; TicketSaleMonitor/1.0)"},
-        timeout=30,
-    )
-    response.raise_for_status()
-    print("HTTP status:", response.status_code)
-    print("Response preview:", repr(response.text[:1000]))
-    soup = BeautifulSoup(response.text, "html.parser")
-    for tag in soup(["script", "style", "noscript"]):
-        tag.decompose()
-    return re.sub(r"\s+", " ", soup.get_text(" ", strip=True)).lower()
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+
+        page = browser.new_page(
+            user_agent=(
+                "Mozilla/5.0 (X11; Linux x86_64) "
+                "AppleWebKit/537.36 Chrome/131.0.0.0 Safari/537.36"
+            )
+        )
+
+        try:
+            response = page.goto(
+                URL,
+                wait_until="domcontentloaded",
+                timeout=60000,
+            )
+
+            page.wait_for_timeout(5000)
+
+            print(
+                "HTTP status:",
+                response.status if response else "No response"
+            )
+
+            text = page.locator("body").inner_text(timeout=15000)
+
+            print("Rendered text length:", len(text))
+            print("Rendered text preview:", repr(text[:1500]))
+
+            return re.sub(r"\s+", " ", text).lower()
+
+        finally:
+            browser.close()
 
 def public_sale_confirmed(text):
     # Fail closed if page is inaccessible, changed, or lacks explicit sale wording.
