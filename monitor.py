@@ -83,6 +83,7 @@ def public_sale_confirmed(text):
         return False
     return any(phrase in text for phrase in PUBLIC_SALE_PHRASES)
 
+
 def place_call():
     required = [
         "TWILIO_ACCOUNT_SID",
@@ -92,30 +93,20 @@ def place_call():
     ]
     missing = [key for key in required if not os.environ.get(key)]
     if missing:
-        raise RuntimeError("Missing GitHub Actions secrets: " + ", ".join(missing))
-
-    voice = VoiceResponse()
-    voice.say(
-        "Ticket alert. Public ticket sales may now be open for India versus "
-        "West Indies, fifth T20 international, in Bengaluru on October "
-        "seventeenth, twenty twenty-six. Please open TicketGenie and confirm "
-        "availability now.",
-        language="en-IN",
-    )
-    voice.pause(length=1)
-    voice.say(
-        "The booking page is ticketgenie dot in. Please check the match page.",
-        language="en-IN",
-    )
+        raise RuntimeError(
+            "Missing GitHub Actions secrets: " + ", ".join(missing)
+        )
 
     client = Client(
         os.environ["TWILIO_ACCOUNT_SID"],
         os.environ["TWILIO_AUTH_TOKEN"],
     )
+
     call = client.calls.create(
         to=os.environ["ALERT_TO_NUMBER"],
         from_=os.environ["TWILIO_FROM_NUMBER"],
-        twiml=str(voice),
+        url="https://webhooks.twilio.com/v1/Voice/Template/voice_text_to_speech",
+        method="POST",
     )
     print("Call requested. SID:", call.sid)
 
