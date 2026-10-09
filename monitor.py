@@ -81,12 +81,13 @@ def public_sale_confirmed(text):
     # Fail closed if page is inaccessible, changed, or lacks explicit sale wording.
     if any(phrase in text for phrase in NOT_PUBLIC_PHRASES):
         return False
-    return any(phrase in text for phrase in PUBLIC_SALE_PHRASES)
+return any(phrase in text for phrase in PUBLIC_SALE_PHRASES)
 
 def place_call():
     required = [
         "TWILIO_ACCOUNT_SID",
         "TWILIO_AUTH_TOKEN",
+        "TWILIO_FROM_NUMBER",
         "ALERT_TO_NUMBER",
     ]
 
@@ -103,10 +104,12 @@ def place_call():
 
     call = client.calls.create(
         to=os.environ["ALERT_TO_NUMBER"],
+        from_=os.environ["TWILIO_FROM_NUMBER"],
         url="https://webhooks.twilio.com/v1/Voice/Template/voice_text_to_speech",
     )
 
     print("Call requested. SID:", call.sid)
+
 
 
 def main():
