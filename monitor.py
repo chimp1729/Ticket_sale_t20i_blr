@@ -81,7 +81,7 @@ def public_sale_confirmed(text):
     # Fail closed if page is inaccessible, changed, or lacks explicit sale wording.
     if any(phrase in text for phrase in NOT_PUBLIC_PHRASES):
         return False
-return any(phrase in text for phrase in PUBLIC_SALE_PHRASES)
+    return any(phrase in text for phrase in PUBLIC_SALE_PHRASES)
 
 def place_call():
     required = [
