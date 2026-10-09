@@ -48,6 +48,8 @@ def get_page_text():
         timeout=30,
     )
     response.raise_for_status()
+    print("HTTP status:", response.status_code)
+    print("Response preview:", response.text[:500])
     soup = BeautifulSoup(response.text, "html.parser")
     for tag in soup(["script", "style", "noscript"]):
         tag.decompose()
