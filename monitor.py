@@ -91,6 +91,7 @@ def place_call():
         "TWILIO_FROM_NUMBER",
         "ALERT_TO_NUMBER",
     ]
+
     missing = [key for key in required if not os.environ.get(key)]
     if missing:
         raise RuntimeError(
@@ -105,10 +106,12 @@ def place_call():
     call = client.calls.create(
         to=os.environ["ALERT_TO_NUMBER"],
         from_=os.environ["TWILIO_FROM_NUMBER"],
-        url="https://webhooks.twilio.com/v1/Voice/Template/voice_text_to_speech",
+        url="https://handler.twilio.com/twiml/EH1989e49338c26706281d8f979e562130",
         method="POST",
     )
+
     print("Call requested. SID:", call.sid)
+
 
 def main():
     if os.environ.get("TEST_CALL", "").lower() == "true":
